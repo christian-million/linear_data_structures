@@ -6,7 +6,7 @@ import copy
 
 
 class Node:
-    '''A single element of a linked list'''
+    '''A single element of linear data'''
     def __init__(self, data, nxt=None):
         # The actual content of the Node
         self.data = data
@@ -15,18 +15,17 @@ class Node:
         self.nxt = nxt
 
     def __str__(self):
-
         # Return the data string representation
         return str(self.data)
 
 
-class LinkedListIter:
-    '''A LinkedList Iterator Class'''
-    def __init__(self, LinkedList):
-        self.LinkedList = LinkedList
+class LinearDataIter:
+    '''A LinearData Iterator Class'''
+    def __init__(self, LinearData):
+        self.LinearData = LinearData
 
         # initialize the first node to be the head
-        self.i_node = self.LinkedList.head
+        self.i_node = self.LinearData.head
 
     def __next__(self):
         if self.i_node:
@@ -38,13 +37,15 @@ class LinkedListIter:
             raise StopIteration
 
 
-class LinkedList:
-    '''Linked list contains nodes which reference subsequent nodes'''
+class LinearData:
+    '''Linear Data is a sequence of nodes which reference subsequent nodes'''
     def __init__(self):
         self.head = None
+        # Set a default delimiter
+        self.delimiter = ' -> '
 
     def append_right(self, data):
-        '''Add a node to the left end of the LinkedList'''
+        '''Add a node to the left end of the LinearData'''
         if self.head is None:
             self.head = Node(data)
         else:
@@ -56,7 +57,7 @@ class LinkedList:
             current_node.nxt = Node(data)
 
     def append_left(self, data):
-        '''Add a node to the right end of the LinkedList'''
+        '''Add a node to the right end of the LinearData'''
         if self.head:
             self.head = Node(data, self.head)
         else:
@@ -75,8 +76,6 @@ class LinkedList:
                 else:
                     prev_node.nxt = None
                     return current_node.data
-        else:
-            return None
 
     def pop_left(self):
         '''Removes and returns the left-most element'''
@@ -84,11 +83,14 @@ class LinkedList:
             out = self.head.data
             self.head = self.head.nxt
             return out
-        else:
-            return None
 
     def contains(self, item):
-        '''Check to see if the LinkedList contains an element'''
+        '''Check to see if the LinearData contains an element
+        NOTE: This compares the item to the data, not against the Node itself.
+        Arguments
+        ---------
+            - item: target item to identify
+        '''
         if self.head:
             current_node = self.head
             while current_node:
@@ -101,11 +103,12 @@ class LinkedList:
 
             return False
 
+        # If empty
         else:
             return False
 
     def reverse(self):
-        '''Reverses the order of the Stack'''
+        '''Reverses the order of the LinearData'''
         if self.head:
 
             previous_node = self.head
@@ -139,36 +142,52 @@ class LinkedList:
         return copy.deepcopy(self)
 
     def __add__(self, other):
+        '''Overwrites plus sign to behave like python lists would when using "+"
+        Nothing happens: LinearData + LinearData2
+        New Object: LinearData3 = LinearData + LinearData2
+        '''
         og = copy.deepcopy(self)
 
-        if isinstance(other, (LinkedList, Node)):
+        # Combines other LinearData Nodes as Subsequent Nodes
+        if isinstance(other, (LinearData, Node)):
 
+            # Create a copy of the right hand side
             other_copy = copy.deepcopy(other.head)
 
+            # If this instance is empty, just fill it with the other
             if og.head is None:
                 og.head = other_copy
+
             else:
                 current_node = og.head
 
+                # Skip along to the last node
                 while current_node.nxt:
                     current_node = current_node.nxt
 
+                # Make the last node reference the head of the other DataStructure
                 current_node.nxt = other_copy
+
+        # If it is not another LinearData structure or Node, just append to right
         else:
             og.append_right(other)
 
+        # return a new LinearData instance
         return og
 
     def __iter__(self):
-        '''Allows the LinkedList to become an iterable. Calls LinkedListIter'''
-        return LinkedListIter(self)
+        '''Allows the LinearData to become an iterable. Calls LinearDataIter'''
+        return LinearDataIter(self)
 
     def __len__(self):
-        '''Counts the number of nodes in the LinkedList
-        Added bonus of considering empty LinkedList as Falsey
+        '''Counts the number of nodes in the LinearData
+        Added bonus of considering empty LinearData as Falsey
         '''
+        # Empty
         if self.head is None:
             return 0
+
+        # Count until the next node doesn't exist.
         else:
             i = 1
             current_node = self.head
@@ -180,9 +199,11 @@ class LinkedList:
             return i
 
     def __str__(self):
+        # Show None
         if self.head is None:
-            return "None"
+            return "<None>"
 
+        # Separate each nodes data using the delimiter
         else:
             current_node = self.head
             out = str(self.head.data)
@@ -190,9 +211,14 @@ class LinkedList:
             while current_node.nxt:
                 current_node = current_node.nxt
 
-                out += f' -> {current_node.data}'
+                out += f'{self.delimiter}{current_node.data}'
 
             return out
+
+
+class LinkedList(LinearData):
+    '''This is an alias for the LinearData Class'''
+    pass
 
 
 if __name__ == '__main__':
@@ -211,6 +237,10 @@ if __name__ == '__main__':
 
     print("Equality check for LinkedList with no parameters")
     print(f"{True if tst_list else False}")
+
+    print("Test behavior for popping on empty:")
+    out = tst_list.pop_left()
+    print(out)
 
     print("Append Right...")
     tst_list.append_right(1)
