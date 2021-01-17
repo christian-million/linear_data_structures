@@ -9,19 +9,11 @@ class Stack(LinearData):
 
     def append(self, item):
         '''In a Stack, items are appended to the top / left'''
-        super().append_left(item)
+        super().append(item, right=False)
 
     def pop(self):
         '''In a Stack, items are popped from the top / left'''
-        return super().pop_left()
-
-    def pop_right(self):
-        '''Unavailable for Stack'''
-        pass
-
-    def append_right(self):
-        '''Unavailable for Stack'''
-        pass
+        return super().pop(right=False)
 
 
 if __name__ == "__main__":

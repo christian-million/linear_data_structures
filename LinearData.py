@@ -44,45 +44,41 @@ class LinearData:
         # Set a default delimiter
         self.delimiter = ' -> '
 
-    def append_right(self, data):
-        '''Add a node to the left end of the LinearData'''
-        if self.head is None:
-            self.head = Node(data)
-        else:
-            current_node = self.head
-
-            while current_node.nxt:
-                current_node = current_node.nxt
-
-            current_node.nxt = Node(data)
-
-    def append_left(self, data):
-        '''Add a node to the right end of the LinearData'''
+    def append(self, data, right=True):
+        '''Add a node to the end of the LinearData object'''
         if self.head:
-            self.head = Node(data, self.head)
-        else:
-            self.head = Node(data)
+            if right:
+                current_node = self.head
 
-    def pop_right(self):
-        '''Removes and returns the right-most element'''
-        if self.head:
-            prev_node = self.head
-            current_node = self.head
-
-            while current_node:
-                if current_node.nxt:
-                    prev_node = current_node
+                while current_node.nxt:
                     current_node = current_node.nxt
-                else:
-                    prev_node.nxt = None
-                    return current_node.data
 
-    def pop_left(self):
-        '''Removes and returns the left-most element'''
+                current_node.nxt = Node(data)
+
+            else:
+                self.head = Node(data, self.head)
+        else:
+            self.head = Node(data)
+
+    def pop(self, right=True):
+        '''Removes and returns the the right/left element'''
         if self.head:
-            out = self.head.data
-            self.head = self.head.nxt
-            return out
+            if right:
+
+                prev_node = self.head
+                current_node = self.head
+
+                while current_node:
+                    if current_node.nxt:
+                        prev_node = current_node
+                        current_node = current_node.nxt
+                    else:
+                        prev_node.nxt = None
+                        return current_node.data
+            else:
+                out = self.head.data
+                self.head = self.head.nxt
+                return out
 
     def contains(self, item):
         '''Check to see if the LinearData contains an element
@@ -170,7 +166,7 @@ class LinearData:
 
         # If it is not another LinearData structure or Node, just append to right
         else:
-            og.append_right(other)
+            og.append(other)
 
         # return a new LinearData instance
         return og
@@ -217,8 +213,27 @@ class LinearData:
 
 
 class LinkedList(LinearData):
-    '''This is an alias for the LinearData Class'''
-    pass
+    '''This is mostly an alias for the LinearData Class'''
+
+    def append_left(self, item):
+        '''Appends an item to the left of the LinkedList'''
+        super().append(item, right=False)
+
+    def append_right(self, item):
+        '''Appends and item to the right of the LinkedList
+        Alias to the append() method
+        '''
+        super().append(item)
+
+    def pop_left(self):
+        '''Removes and returns an item from left of the LinkedList'''
+        return super().pop(right=False)
+
+    def pop_right(self):
+        '''Removes and returns an item from right of the LinkedList
+        Alias to the pop() method
+        '''
+        return super().pop()
 
 
 if __name__ == '__main__':
@@ -239,34 +254,37 @@ if __name__ == '__main__':
     print(f"{True if tst_list else False}")
 
     print("Test behavior for popping on empty:")
-    out = tst_list.pop_left()
+    out = tst_list.pop(False)
     print(out)
 
     print("Append Right...")
-    tst_list.append_right(1)
+    tst_list.append(1)
     print(tst_list)
 
     tst_list.append_right(2)
     print(tst_list)
 
-    tst_list.append_right(3)
+    tst_list.append(3)
     print(tst_list)
 
     print("Append Left...")
-    tst_list.append_left(10)
+    tst_list.append(10, right=False)
+    print(tst_list)
+
+    tst_list.append_left(20)
     print(tst_list)
 
     print("Pop Right...")
-    p_right = tst_list.pop_right()
+    p_right = tst_list.pop()
     print(f"Popped Value: {p_right}")
     print(f"New Linked List: {tst_list}")
 
     print("Append Right...")
-    tst_list.append_right(3)
+    tst_list.append(3)
     print(tst_list)
 
     print("Pop Left...")
-    p_left = tst_list.pop_left()
+    p_left = tst_list.pop(False)
     print(f"Popped Value: {p_left}")
     print(f"New Linked List: {tst_list}")
 
@@ -286,7 +304,7 @@ if __name__ == '__main__':
     print(f"tst_list.contains({tst_value}): {tst_list.contains(tst_value)}")
 
     print("Append Right...")
-    tst_list.append_right(None)
+    tst_list.append(None)
     print(tst_list)
 
     print("Testing contains...")
@@ -294,7 +312,7 @@ if __name__ == '__main__':
     print(f"tst_list.contains({tst_value}): {tst_list.contains(tst_value)}")
 
     print("Append Right...")
-    tst_list.append_right(['a', 'b', 'c'])
+    tst_list.append(['a', 'b', 'c'])
     print(tst_list)
 
     print("Testing contains...")
@@ -309,9 +327,9 @@ if __name__ == '__main__':
 
     print("Testing __add__...")
     tst_list2 = LinkedList()
-    tst_list2.append_right('a')
-    tst_list2.append_right('b')
-    tst_list2.append_right('c')
+    tst_list2.append('a')
+    tst_list2.append('b')
+    tst_list2.append('c')
 
     print(f"tst_list: {tst_list}")
     print(f"tst_list2: {tst_list2}")
@@ -334,3 +352,8 @@ if __name__ == '__main__':
 
     print(f"new_tst_list: {new_tst_list}")
     print(f"len(new_tst_list): {len(new_tst_list)}")
+
+    print("REVERSING LIST...")
+    print(f"Current List: {new_tst_list}")
+    new_tst_list.reverse()
+    print(f"Reversed List: {new_tst_list}")

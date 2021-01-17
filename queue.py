@@ -9,19 +9,7 @@ class Queue(LinearData):
 
     def append(self, item):
         '''In a Queue, items are appended to the start / left'''
-        super().append_left(item)
-
-    def pop(self):
-        '''In a Queue, items are popped from the end / right'''
-        return super().pop_right()
-
-    def pop_left(self):
-        '''Unavailable for Queue'''
-        pass
-
-    def append_right(self):
-        '''Unavailable for Queue'''
-        pass
+        super().append(item, right=False)
 
 
 if __name__ == "__main__":
