@@ -3,8 +3,8 @@ from LinearData import LinearData
 
 class Stack(LinearData):
     '''Last In First Out data structure where pops and pushes only happen at one end.'''
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, unpack=True):
+        super().__init__(*args, unpack=True)
         self.delimiter = ' / '
 
     def append(self, item):
@@ -55,3 +55,6 @@ if __name__ == "__main__":
     print("...reversing...")
     tst_stack.reverse()
     print(f"Now: {tst_stack}")
+
+    new_stack = Stack([1, 2, 3, 4, 5, 6, 8])
+    print(new_stack)

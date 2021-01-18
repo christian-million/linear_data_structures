@@ -289,6 +289,8 @@ class LinearData:
 
 class LinkedList(LinearData):
     '''This is mostly an alias for the LinearData Class'''
+    def __init__(self, *args, unpack=True):
+        super().__init__(*args, unpack=True)
 
     def append_left(self, item):
         '''Appends an item to the left of the LinkedList'''
