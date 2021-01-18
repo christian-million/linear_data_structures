@@ -48,9 +48,9 @@
 
 # TODO
 
-- [ ] Create a Doubly Linked List
+- [X] Create a Doubly Linked List
 
-- [ ] Create a LinearDataStructure class that the rest of these can inherit from
+- [X] Create a LinearDataStructure class that the rest of these can inherit from
 
     - This will reduce code duplication for some of the cool methods like reverse and `__contains__`.
 
