@@ -10,9 +10,18 @@ class DblNode(Node):
 
 class DblLinkedList(LinearData):
     '''LinkedList where each node references the previous and subsequent nodes'''
-    def __init__(self):
-        super().__init__()
-        self.delimiter = ' <-> '
+    def __init__(self, *args, unpack=True):
+        self.head = None
+
+        if args:
+            if len(args) == 1 and isinstance(args[0], (list, tuple)) and unpack:
+                args = args[0]
+
+            for arg in args:
+                self.append(arg)
+
+        # Set a default delimiter
+        self.delimiter = ' -> '
 
     def append(self, data, right=True):
         '''Add a node to the end of the DblLinkedList object'''
