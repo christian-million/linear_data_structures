@@ -39,8 +39,17 @@ class LinearDataIter:
 
 class LinearData:
     '''Linear Data is a sequence of nodes which reference subsequent nodes'''
-    def __init__(self):
+    def __init__(self, *args, unpack=True):
         self.head = None
+
+        # args is technically a tuple, so not using any lists.
+        if args:
+            if len(args) == 1 and isinstance(args[0], (list, tuple)) and unpack:
+                args = args[0]
+
+            for arg in args:
+                self.append(arg)
+
         # Set a default delimiter
         self.delimiter = ' -> '
 
@@ -256,6 +265,26 @@ if __name__ == '__main__':
     print("Test behavior for popping on empty:")
     out = tst_list.pop(False)
     print(out)
+
+    print("LinkedList(1, 2, 3, 4, 5)")
+    tst = LinkedList(1, 2, 3, 4, 5)
+    print(tst)
+
+    print("LinkedList([1, 2, 3], (4, 5))")
+    tst = LinkedList([1, 2, 3], (4, 5))
+    print(tst)
+
+    print("LinkedList([1, 2, 3, 4, 5])")
+    tst = LinkedList([1, 2, 3, 4, 5])
+    print(tst)
+
+    print("LinkedList((1, 2, 3, 4, 5))")
+    tst = LinkedList((1, 2, 3, 4, 5))
+    print(tst)
+
+    print("LinkedList([1, 2, 3, 4, 5], unpack=False)")
+    tst = LinkedList([1, 2, 3, 4, 5], unpack=False)
+    print(tst)
 
     print("Append Right...")
     tst_list.append(1)
