@@ -6,7 +6,13 @@ import copy
 
 
 class Node:
-    '''A single element of linear data'''
+    '''A single element of a linear data structure
+    Contains data to store and a reference to the subsequent Node (or None if the last Node)
+    Arguments
+    ---------
+        - data: The information to store. Can be anything.
+        - nxt: A reference to the subsequent Node, or None if the last.
+    '''
     def __init__(self, data, nxt=None):
         # The actual content of the Node
         self.data = data
@@ -20,7 +26,9 @@ class Node:
 
 
 class LinearDataIter:
-    '''A LinearData Iterator Class'''
+    '''An iterator for the LinearData class that allows the LinearData class to be iterated over
+    Iteration happens on each Nodes data attribute
+    '''
     def __init__(self, LinearData):
         self.LinearData = LinearData
 
@@ -29,8 +37,13 @@ class LinearDataIter:
 
     def __next__(self):
         if self.i_node:
+            # capture the data before overriding the next node
             out = self.i_node.data
+
+            # increment to the subsequent node
             self.i_node = self.i_node.nxt
+
+            # return the data
             return out
 
         else:
@@ -38,12 +51,19 @@ class LinearDataIter:
 
 
 class LinearData:
-    '''Linear Data is a sequence of nodes which reference subsequent nodes'''
+    '''Linear Data is a sequence of nodes which reference subsequent nodes
+    Arguments
+    ---------
+    *args -- elements added to structure on initialization
+    unpack -- for single length *args of type list or tuple, use each element as node (defaults True)
+    '''
     def __init__(self, *args, unpack=True):
+
         self.head = None
 
-        # args is technically a tuple, so not using any lists.
+        # args is technically a tuple, so not using any lists :)
         if args:
+            # Unpack each element of single list or tuple into individual nodes
             if len(args) == 1 and isinstance(args[0], (list, tuple)) and unpack:
                 args = args[0]
 
@@ -54,58 +74,95 @@ class LinearData:
         self.delimiter = ' -> '
 
     def append(self, data, right=True):
-        '''Add a node to the end of the LinearData object'''
+        '''Add a node to the end
+        Arguments
+        ---------
+        data -- the data to append. Could be anything.
+        right -- append to the right (default True)
+        '''
         if self.head:
             if right:
+                # Initialize a current_node to overwrite
                 current_node = self.head
 
+                # Swipe through each node until the last
                 while current_node.nxt:
                     current_node = current_node.nxt
 
+                # Add the new node to the end
                 current_node.nxt = Node(data)
 
+            # On left append, new node becomes the head
             else:
                 self.head = Node(data, self.head)
+        # On empty list, new node becomes the head
         else:
             self.head = Node(data)
 
     def pop(self, right=True):
-        '''Removes and returns the the right/left element'''
+        '''Removes and returns the the right/left element
+        Arguments
+        ---------
+        right -- pop the right side? (default True)
+        '''
         if self.head:
             if right:
-
+                # Initialize reference nodes to overwrite
                 prev_node = self.head
                 current_node = self.head
 
+                # Until the last node has been reached
                 while current_node:
+
+                    # Skip to the next
                     if current_node.nxt:
                         prev_node = current_node
                         current_node = current_node.nxt
+
+                    # On the last node...
                     else:
+                        # ...Remove references to it
                         prev_node.nxt = None
+
+                        # Return the data
                         return current_node.data
+
+            # On left pop, the heads next becomes the head
             else:
+                # capture the data before overwriting
                 out = self.head.data
+
+                # Replace the head before returning
                 self.head = self.head.nxt
+
+                # Return the popped data
                 return out
 
     def contains(self, item):
-        '''Check to see if the LinearData contains an element
+        '''Check to see if the structure contains an element
         NOTE: This compares the item to the data, not against the Node itself.
         Arguments
         ---------
-            - item: target item to identify
+        item -- target item to identify
         '''
         if self.head:
+
+            # Reference node to overwrite
             current_node = self.head
+
+            # Run through each node
             while current_node:
 
                 # Confirmed this works for None
+                # Compares a Nodes data, not a Node
                 if current_node.data == item:
                     return True
+
+                # Skip to the next node
                 else:
                     current_node = current_node.nxt
 
+            # If while loop completed, then no match was found
             return False
 
         # If empty
@@ -113,9 +170,10 @@ class LinearData:
             return False
 
     def reverse(self):
-        '''Reverses the order of the LinearData'''
+        '''Reverses the order of the structure'''
         if self.head:
 
+            # Initialize some reference variables to overwrite
             previous_node = self.head
             next_node = self.head.nxt
             previous_node.nxt = None
@@ -144,12 +202,16 @@ class LinearData:
         return self.contains(item)
 
     def copy(self):
+        '''Returns a deepcopy of itself'''
         return copy.deepcopy(self)
 
     def __add__(self, other):
         '''Overwrites plus sign to behave like python lists would when using "+"
         Nothing happens: LinearData + LinearData2
         New Object: LinearData3 = LinearData + LinearData2
+        Arguments
+        ---------
+        other -- the right hand side of an expression (self + other)
         '''
         og = copy.deepcopy(self)
 
@@ -181,12 +243,12 @@ class LinearData:
         return og
 
     def __iter__(self):
-        '''Allows the LinearData to become an iterable. Calls LinearDataIter'''
+        '''Allows the structure to become an iterable.'''
         return LinearDataIter(self)
 
     def __len__(self):
-        '''Counts the number of nodes in the LinearData
-        Added bonus of considering empty LinearData as Falsey
+        '''Counts the number of nodes in the structure
+        Added bonus of considering empty structure as Falsey
         '''
         # Empty
         if self.head is None:
@@ -210,12 +272,16 @@ class LinearData:
 
         # Separate each nodes data using the delimiter
         else:
+            # Initialize reference node to overwrite
             current_node = self.head
+
+            # Initialize the string to return with first element
             out = str(self.head.data)
 
             while current_node.nxt:
                 current_node = current_node.nxt
 
+                # Add to the out string.
                 out += f'{self.delimiter}{current_node.data}'
 
             return out

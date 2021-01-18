@@ -2,7 +2,9 @@ from LinearData import LinearData
 
 
 class Queue(LinearData):
-    '''First In First Out data structure where pushes happen on the left and pops on the right'''
+    '''First In First Out data structure where pushes happen on the left and pops on the right
+    Inherits from `LinearData` and only overrides the `append` method, since appending should happen on the left.
+    '''
     def __init__(self):
         super().__init__()
         self.delimiter = ' ~> '

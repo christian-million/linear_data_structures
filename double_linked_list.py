@@ -13,7 +13,9 @@ class DblLinkedList(LinearData):
     def __init__(self, *args, unpack=True):
         self.head = None
 
+        # args is technically a tuple, so not using any lists :)
         if args:
+            # Unpack each element of single list or tuple into individual nodes
             if len(args) == 1 and isinstance(args[0], (list, tuple)) and unpack:
                 args = args[0]
 
@@ -21,21 +23,26 @@ class DblLinkedList(LinearData):
                 self.append(arg)
 
         # Set a default delimiter
-        self.delimiter = ' -> '
+        self.delimiter = ' <-> '
 
     def append(self, data, right=True):
         '''Add a node to the end of the DblLinkedList object'''
         if self.head:
             if right:
+                # Initialize a current_node to overwrite
                 current_node = self.head
 
+                # Swipe through each node until the last
                 while current_node.nxt:
                     current_node = current_node.nxt
 
+                # Add the new node to the end
                 current_node.nxt = DblNode(data, prev=current_node)
 
+            # On left append, new node becomes the head
             else:
                 self.head = DblNode(data, self.head)
+        # On empty list, new node becomes the head
         else:
             self.head = DblNode(data)
 
@@ -44,26 +51,49 @@ class DblLinkedList(LinearData):
         if self.head:
             if right:
 
+                # Initialize reference nodes to overwrite
                 current_node = self.head
 
                 while current_node:
+
+                    # skip to the end
                     if current_node.nxt:
                         current_node = current_node.nxt
+
                     else:
+                        # Remove references to the last item
                         current_node.prev.nxt = None
+
+                        # Return it's data
                         return current_node.data
+
+            # On left pop, the heads next becomes the head
             else:
+                # capture the data before overwriting
                 out = self.head.data
+
+                # Replace the head before returning
                 self.head = self.head.nxt
+
+                # Remove reference to old head
                 self.head.prev = None
+
+                # Return the popped data
                 return out
 
     def append_left(self, item):
-        '''Appended item to the start / left'''
+        '''Appended item to the start / left
+        Arguments
+        ---------
+        item -- element to append'''
         self.append(item, right=False)
 
     def append_right(self, item):
-        '''Appended item to the end / right'''
+        '''Appended item to the end / right
+        Arguments
+        ---------
+        item -- element to append
+        '''
         self.append(item)
 
     def pop_left(self):
@@ -75,9 +105,10 @@ class DblLinkedList(LinearData):
         return self.pop()
 
     def reverse(self):
-        '''Reverses the order of the LinearData'''
+        '''Reverses the order of the structure'''
         if self.head:
 
+            # Initialize some reference variables to overwrite
             previous_node = self.head
             next_node = self.head.nxt
             previous_node.nxt = None

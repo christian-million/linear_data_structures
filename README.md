@@ -54,7 +54,7 @@
 
     - This will reduce code duplication for some of the cool methods like reverse and `__contains__`.
 
-- [ ] Go over everything with comments
+- [X] Go over everything with comments
 
 - [ ] Find a more scalable way to test these
 
