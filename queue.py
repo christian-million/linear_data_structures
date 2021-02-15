@@ -50,10 +50,10 @@ class CarmenQ(Queue):
                 current_node = current_node.nxt
 
             # We found i from the left, but I'm assuming the line "starts" at the right.
-            if i:
+            if i is not None:
                 i = n - i
 
-        if i:
+        if i is not None:
             print(f"{name} in index {i}.")
 
         else:
@@ -63,6 +63,7 @@ class CarmenQ(Queue):
 
 
 if __name__ == "__main__":
+    import time
 
     print("Testing empty stack")
     tst_queue = Queue()
@@ -97,7 +98,20 @@ if __name__ == "__main__":
     new_queue = Queue([1, 2, 3, 4, 5, 6, 7])
     print(new_queue)
 
-    print("Testing CarmenQ")
-    c_q = CarmenQ([1, 2, 3, "Carmen SanDiego", 5])
-    print(c_q)
-    print(c_q.find_carmen())
+    tst_queue = list(range(1, 1_000_000))
+    tst_queue[-1] = "Carmen SanDiego"
+    c_q1 = CarmenQ(tst_queue)
+
+    start_time = time.time()
+    i1 = c_q1.find_carmen()
+    end_time = time.time()
+    print(f"It took {end_time - start_time} seconds to find Carmen in the {i1}th spot in Queue of length {len(c_q1)}")
+
+    tst_queue2 = list(range(1, 2_000_000))
+    tst_queue2[-1] = "Carmen SanDiego"
+    c_q2 = CarmenQ(tst_queue2)
+
+    start_time = time.time()
+    i2 = c_q2.find_carmen()
+    end_time = time.time()
+    print(f"It took {end_time - start_time} seconds to find Carmen in the {i2}th spot in Queue of length {len(c_q2)}")
